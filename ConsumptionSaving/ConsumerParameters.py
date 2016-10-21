@@ -226,3 +226,20 @@ init_medical_shocks['MedShkCount'] = MedShkCount
 init_medical_shocks['MedShkCountTail'] = MedShkCountTail
 init_medical_shocks['MedPrice'] = MedPrice
 init_medical_shocks['aXtraCount'] = 32
+
+# -----------------------------------------------------------------------------
+# ----- Define additional parameters for behavioral models --------------------
+# -----------------------------------------------------------------------------
+
+SRDiscFac = 0.5                     # Short-run discount factor
+SRDiscFacE = 1                      # Short-run discount factor erroneously expected to pertain to future selves
+PermGroFacDelE = 0                  # Erroneously believe income growth = PermGroFac+PermGroFacDelE
+init_idiosyncratic_shocksB = copy(init_idiosyncratic_shocks)
+init_idiosyncratic_shocksB['SRDiscFac'] = SRDiscFac
+init_idiosyncratic_shocksB['SRDiscFacE'] = SRDiscFacE
+init_idiosyncratic_shocksB['PermGroFacDelE'] = PermGroFacDelE
+
+init_lifecycleB = copy(init_lifecycle)
+init_lifecycleB ['SRDiscFac'] = SRDiscFac
+init_lifecycleB ['SRDiscFacE'] = SRDiscFacE
+init_lifecycleB ['PermGroFacDelE'] = PermGroFacDelE
