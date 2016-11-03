@@ -48,16 +48,18 @@ BaselineExample.Rfree = 1.02
 """
 
 ## Change some parameter values
-BaselineExample.Rfree       = 1. #change the risk-free interest rate
-BaselineExample.CRRA        = 1.   # change  the coefficient of relative risk aversion
-BaselineExample.BoroCnstArt = 0    # change the artificial borrowing constraint
-BaselineExample.DiscFac     = 1.   
-BaselineExample.SRDiscFac    = 1   #chosen so that target debt-to-permanent-income_ratio is about .1
-BaselineExample.SRDiscFacE     = 1   #chosen so that target debt-to-permanent-income_ratio is about .1
+BaselineExample.Rfree       = 1.001 #change the risk-free interest rate
+BaselineExample.CRRA        = 1.001   # change  the coefficient of relative risk aversion
+BaselineExample.BoroCnstArt = 0.    # change the artificial borrowing constraint
+BaselineExample.DiscFac     = .9999   
+BaselineExample.SRDiscFac    = 1.   #chosen so that target debt-to-permanent-income_ratio is about .1
+BaselineExample.SRDiscFacE     = 1.   #chosen so that target debt-to-permanent-income_ratio is about .1
 BaselineExample.PermGroFac = [1.]
 BaselineExample.PermShkStd = [0.000001]                  
 BaselineExample.TranShkStd = [0.000001] 
+BaselineExample.updateIncomeProcess()
 
+BaselineExample.CubicBool = False
 ####################################################################################################
 ####################################################################################################
 
@@ -87,9 +89,9 @@ In HARK, this is done by calling the solve() method of the ConsumerType.
 ### First solve the baseline example.
 BaselineExample.solve()
 
-### Now solve the comparison example of the consumer with a bit more credit
+### Now solve the comparison example of the consumer under the assumption of 
+### perfectly naive quasi-hyperbolic discounting.
 PerfectNaivete.solve()
-
 
 
 ## Now, plot the functions we want
@@ -115,7 +117,6 @@ plotFuncs([BaselineExample.solution[0].cFunc,PerfectNaivete.solution[0].cFunc],
 
 
 ## Plot the MPCs to compare them
-#print('MPC out of Credit v MPC out of Income')
 #plt.ylim([0.,1.2])
 #plotFuncs([FirstDiffMPC_Credit,FirstDiffMPC_Income],
 #          BaselineExample.solution[0].mNrmMin,x_max,
