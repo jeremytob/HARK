@@ -32,10 +32,10 @@ init_perfect_foresight = { 'CRRA': CRRA,
 
 # Parameters for constructing the "assets above minimum" grid
 aXtraMin = 0.001                    # Minimum end-of-period "assets above minimum" value
-aXtraMax = 20                       # Maximum end-of-period "assets above minimum" value               
+aXtraMax = 200                       # Maximum end-of-period "assets above minimum" value               
 aXtraExtra = None                   # Some other value of "assets above minimum" to add to the grid, not used
 aXtraNestFac = 3                    # Exponential nesting factor when constructing "assets above minimum" grid
-aXtraCount = 12                     # Number of points in the grid of "assets above minimum"
+aXtraCount = 22                     # Number of points in the grid of "assets above minimum"
 
 # Parameters describing the income process
 PermShkCount = 7                    # Number of points in discrete approximation to permanent income shocks

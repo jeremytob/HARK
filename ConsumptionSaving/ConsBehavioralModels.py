@@ -306,7 +306,7 @@ class ConsNaiveHyperbolicType(IndShockConsumerType):
     '''        
     time_inv_ = IndShockConsumerType.time_inv_ + ['SRDiscFacE','SRDiscFac']
     
-    def __init__(self,cycles=1,time_flow=True,**kwds):
+    def __init__(self,cycles=0,time_flow=True,**kwds):
         '''
         Instantiate a new ConsumerType with given data.
         See ConsumerParameters.init_idiosyncratic_shocks for a dictionary of

@@ -51,15 +51,27 @@ BaselineExample.Rfree = 1.02
 BaselineExample.Rfree       = 1.001 #change the risk-free interest rate
 BaselineExample.CRRA        = 1.001   # change  the coefficient of relative risk aversion
 BaselineExample.BoroCnstArt = 0.    # change the artificial borrowing constraint
-BaselineExample.DiscFac     = .9999   
-BaselineExample.SRDiscFac    = 1.   #chosen so that target debt-to-permanent-income_ratio is about .1
-BaselineExample.SRDiscFacE     = 1.   #chosen so that target debt-to-permanent-income_ratio is about .1
+BaselineExample.DiscFac     = .999
+BaselineExample.SRDiscFac    = 1.  
+BaselineExample.SRDiscFacE     = 1.
 BaselineExample.PermGroFac = [1.]
 BaselineExample.PermShkStd = [0.000001]                  
 BaselineExample.TranShkStd = [0.000001] 
 BaselineExample.updateIncomeProcess()
-
 BaselineExample.CubicBool = False
+
+PerfectNaivete.Rfree       = 1.001 #change the risk-free interest rate
+PerfectNaivete.CRRA        = 1.001   # change  the coefficient of relative risk aversion
+PerfectNaivete.BoroCnstArt = 0.    # change the artificial borrowing constraint
+PerfectNaivete.DiscFac     = .999   
+PerfectNaivete.SRDiscFac    = .99   
+PerfectNaivete.SRDiscFacE     = 1. 
+PerfectNaivete.PermGroFac = [1.]
+PerfectNaivete.PermShkStd = [0.000001]                  
+PerfectNaivete.TranShkStd = [0.000001] 
+PerfectNaivete.updateIncomeProcess()
+PerfectNaivete.CubicBool = False
+
 ####################################################################################################
 ####################################################################################################
 
@@ -74,11 +86,13 @@ from copy import deepcopy
 #PerfectNaivete.SRDiscFacE    = 1 
 
 """
-For both types, abstract away from survival probabilities.
+For both types, abstract away from complications.
 """
 
 PerfectNaivete.LivPrb = [1.]
 BaselineExample.LivPrb = [1.]
+BaselineExample.cycles = 0
+PerfectNaivete.cycles = 0
 
 ####################################################################################################
 """
@@ -102,7 +116,7 @@ import pylab as plt # We need this module to change the y-axis on the graphs
 
 
 # Declare the upper limit for the graph
-x_max = 10.
+x_max = 100.
 
 
 # Note that plotFuncs takes four arguments: (1) a list of the arguments to plot, 
