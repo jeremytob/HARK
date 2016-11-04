@@ -32,7 +32,6 @@ import ConsumerParameters as Params
 BaselineExample = IndShockConsumerType(**Params.init_idiosyncratic_shocks)
 PerfectNaivete  = ConsNaiveHyperbolicType(**Params.init_idiosyncratic_shocksB)
 
-
 ####################################################################################################
 ####################################################################################################
 
@@ -59,12 +58,13 @@ BaselineExample.PermShkStd = [0.000001]
 BaselineExample.TranShkStd = [0.000001] 
 BaselineExample.updateIncomeProcess()
 BaselineExample.CubicBool = False
+BaselineExample.vFuncBool = True
 
 PerfectNaivete.Rfree       = 1.001 #change the risk-free interest rate
 PerfectNaivete.CRRA        = 1.001   # change  the coefficient of relative risk aversion
 PerfectNaivete.BoroCnstArt = 0.    # change the artificial borrowing constraint
 PerfectNaivete.DiscFac     = .999   
-PerfectNaivete.SRDiscFac    = .99   
+PerfectNaivete.SRDiscFac    = .5   
 PerfectNaivete.SRDiscFacE     = 1. 
 PerfectNaivete.PermGroFac = [1.]
 PerfectNaivete.PermShkStd = [0.000001]                  
@@ -92,7 +92,7 @@ For both types, abstract away from complications.
 PerfectNaivete.LivPrb = [1.]
 BaselineExample.LivPrb = [1.]
 BaselineExample.cycles = 0
-PerfectNaivete.cycles = 0
+PerfectNaivete.cycles = 1
 
 ####################################################################################################
 """
@@ -102,6 +102,10 @@ In HARK, this is done by calling the solve() method of the ConsumerType.
 
 ### First solve the baseline example.
 BaselineExample.solve()
+
+PerfectNaivete.cFunc_terminal_ = BaselineExample.solution[0].cFunc
+PerfectNaivete.vFunc_terminal_ = BaselineExample.solution[0].vFunc
+#PerfectNaivete.EXPvPfuncNext = BaselineExample.vPfuncNext
 
 ### Now solve the comparison example of the consumer under the assumption of 
 ### perfectly naive quasi-hyperbolic discounting.
@@ -127,9 +131,12 @@ x_max = 100.
 print('Consumption functions:')
 plotFuncs([BaselineExample.solution[0].cFunc,PerfectNaivete.solution[0].cFunc],
            BaselineExample.solution[0].mNrmMin,x_max,
-           legend_kwds = {'loc': 'upper left', 'labels': ["Baseline","QH Naive"]})
+           legend_kwds = {'loc': 'upper a_init
 
-
+print BaselineExample.solution[0].cFunc(range(10))
+print PerfectNaivete.solution[0].cFunc(range(10))
+                          
+                          
 ## Plot the MPCs to compare them
 #plt.ylim([0.,1.2])
 #plotFuncs([FirstDiffMPC_Credit,FirstDiffMPC_Income],

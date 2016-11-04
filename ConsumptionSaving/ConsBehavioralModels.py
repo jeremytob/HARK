@@ -86,6 +86,7 @@ class ConsNaiveHyperbolicSolver(ConsIndShockSolver):
         None
         '''
         # Set basic attributes of the problem
+
         self.assignParameters(solution_next,IncomeDstn,LivPrb,DiscFac,
                          CRRA,Rfree,SRDiscFac,SRDiscFacE,PermGroFac,
                          BoroCnstArt,aXtraGrid,vFuncBool,CubicBool)
@@ -150,78 +151,29 @@ class ConsNaiveHyperbolicSolver(ConsIndShockSolver):
 
         self.SRDiscFacE = SRDiscFacE
         self.SRDiscFac  = SRDiscFac
-        
-        
-    def calcEndOfPrdvPP(self):
-        '''
-        Calculates end-of-period marginal marginal value using a pre-defined
-        array of next period market resources in self.mNrmNext.
-        
-        Parameters
-        ----------
-        none
-        
-        Returns
-        -------
-        EndOfPrdvPP : np.array
-            End-of-period marginal marginal value of assets at each value in
-            the grid of assets.
-        '''
-        EndOfPrdvPP = self.SRDiscFac * self.DiscFacEff*self.Rfree*self.Rfree*self.PermGroFac**(-self.CRRA-1.0)*\
-                      np.sum(self.PermShkVals_temp**(-self.CRRA-1.0)*self.vPPfuncNext(self.mNrmNext)
-                      *self.ShkPrbs_temp,axis=0)
-        return EndOfPrdvPP
-            
-    def makeEndOfPrdvFunc(self,EndOfPrdvP):
-        '''
-        Construct the end-of-period value function for this period, storing it
-        as an attribute of self for use by other methods.
-        
-        Parameters
-        ----------
-        EndOfPrdvP : np.array
-            Array of end-of-period marginal value of assets corresponding to the
-            asset values in self.aNrmNow.
-            
-        Returns
-        -------
-        none
-        '''
-        VLvlNext            = (self.PermShkVals_temp**(1.0-self.CRRA)*\
-                               self.PermGroFac**(1.0-self.CRRA))*self.vFuncNext(self.mNrmNext)
-        EndOfPrdv           = self.SRDiscFac * self.DiscFacEff*np.sum(VLvlNext*self.ShkPrbs_temp,axis=0)
-        EndOfPrdvNvrs       = self.uinv(EndOfPrdv) # value transformed through inverse utility
-        EndOfPrdvNvrsP      = EndOfPrdvP*self.uinvP(EndOfPrdv)
-        EndOfPrdvNvrs       = np.insert(EndOfPrdvNvrs,0,0.0)
-        EndOfPrdvNvrsP      = np.insert(EndOfPrdvNvrsP,0,EndOfPrdvNvrsP[0]) # This is a very good approximation, vNvrsPP = 0 at the asset minimum
-        aNrm_temp           = np.insert(self.aNrmNow,0,self.BoroCnstNat)
-        EndOfPrdvNvrsFunc   = CubicInterp(aNrm_temp,EndOfPrdvNvrs,EndOfPrdvNvrsP)
-        self.EndOfPrdvFunc  = ValueFunc(EndOfPrdvNvrsFunc,self.CRRA)
-
-        
 
             
-    def calcEndOfPrdvP(self):
-        '''
-        Calculate end-of-period marginal value of assets at each point in aNrmNow.
-        Does so by taking a weighted sum of next period marginal values across
-        income shocks (in a preconstructed grid self.mNrmNext).
-        
-        Parameters
-        ----------
-        none
-        
-        Returns
-        -------
-        EndOfPrdvP : np.array
-            A 1D array of end-of-period marginal value of assets
-        '''        
-
-        EndOfPrdvP  = self.SRDiscFac * self.DiscFacEff*self.Rfree*self.PermGroFac**(-self.CRRA)*np.sum(
-                      self.PermShkVals_temp**(-self.CRRA)*
-                      self.vPfuncNext(self.mNrmNext)*self.ShkPrbs_temp,axis=0)  
-        return EndOfPrdvP
-        
+#    def calcEndOfPrdvP(self):
+#        '''
+#        Calculate end-of-period marginal value of assets at each point in aNrmNow.
+#        Does so by taking a weighted sum of next period marginal values across
+#        income shocks (in a preconstructed grid self.mNrmNext).
+#        
+#        Parameters
+#        ----------
+#        none
+#        
+#        Returns
+#        -------
+#        EndOfPrdvP : np.array
+#            A 1D array of end-of-period marginal value of assets
+#        '''        
+#
+#        EndOfPrdvP  = self.DiscFacEff*self.Rfree*self.PermGroFac**(-self.CRRA)*np.sum(
+#                      self.PermShkVals_temp**(-self.CRRA)*
+#                      self.EXPvPfuncNext(self.mNrmNext)*self.ShkPrbs_temp,axis=0)  
+#        return EndOfPrdvP
+#        
 ###############################################################################
 ###############################################################################
 
@@ -279,7 +231,19 @@ def solveConsNaive(solution_next,IncomeDstn,LivPrb,DiscFac,SRDiscFac,SRDiscFacE,
         ginal value function vPPfunc.
     '''
 
- 
+#    if solution_next.EXPvPfuncNext == None:
+#        pass
+        #(solve problem for exponential consumer.  self.EXPvPfuncNext = [result for vPfuncNext])
+        # init a ConsIndShockSUmer Type
+
+        # solve the COnsIndShock problem
+
+        # assign the ConsIndShock continuation value to the QH naive consumer type
+
+        # iterate one period for the QH consumer
+
+    DiscFac = DiscFac * SRDiscFac
+
     solver = ConsNaiveHyperbolicSolver(solution_next,IncomeDstn,LivPrb,DiscFac,
                                        SRDiscFac,SRDiscFacE,CRRA,Rfree,
                                        PermGroFac,BoroCnstArt,aXtraGrid,
@@ -305,7 +269,8 @@ class ConsNaiveHyperbolicType(IndShockConsumerType):
     period assets, and an artificial borrowing constraint.
     '''        
     time_inv_ = IndShockConsumerType.time_inv_ + ['SRDiscFacE','SRDiscFac']
-    
+
+
     def __init__(self,cycles=0,time_flow=True,**kwds):
         '''
         Instantiate a new ConsumerType with given data.
@@ -332,6 +297,9 @@ class ConsNaiveHyperbolicType(IndShockConsumerType):
 
                 
     def calcBoundingValues(self):
+
+        raise NotImplementedError
+
         '''
         Calculate human wealth plus minimum and maximum MPC in an infinite
         horizon model with only one period repeated indefinitely.  Store results
@@ -401,6 +369,7 @@ class ConsNaiveHyperbolicType(IndShockConsumerType):
         None
         '''
         # Get the income distribution (or make a very dense one)
+        raise NotImplementedError
         if approx_inc_dstn:
             IncomeDstn = self.IncomeDstn[0]
         else:
