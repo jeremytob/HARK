@@ -131,7 +131,7 @@ x_max = 100.
 print('Consumption functions:')
 plotFuncs([BaselineExample.solution[0].cFunc,PerfectNaivete.solution[0].cFunc],
            BaselineExample.solution[0].mNrmMin,x_max,
-           legend_kwds = {'loc': 'upper left', 'labels': ["Baseline","Perfect Naivete"]})
+           legend_kwds = {'labels': ["Baseline","Perfect Naivete"]})
 
 print BaselineExample.solution[0].cFunc(range(10))
 print PerfectNaivete.solution[0].cFunc(range(10))
