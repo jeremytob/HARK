@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 ## Here, we bring in an agent making a consumption/savings decision every period, subject
 ## to transitory and permanent income shocks.
 from ConsIndShockModel import IndShockConsumerType
-from ConsBehavioralModels import ConsNaiveHyperbolicType
+from ConsBehavioralModels import ConsQuasiHyperbolicType
 
 
 ## Import the default parameter values
@@ -30,7 +30,7 @@ import ConsumerParameters as Params
 ## We create the instance of the consumer type by calling IndShockConsumerType()
 ## We use the default parameter values by passing **Params.init_idiosyncratic_shocks as an argument
 BaselineExample = IndShockConsumerType(**Params.init_idiosyncratic_shocks)
-PerfectNaivete  = ConsNaiveHyperbolicType(**Params.init_idiosyncratic_shocksB)
+PerfectNaivete  = ConsQuasiHyperbolicType(**Params.init_idiosyncratic_shocksB)
 
 ####################################################################################################
 ####################################################################################################
@@ -47,30 +47,30 @@ BaselineExample.Rfree = 1.02
 """
 
 ## Change some parameter values
-BaselineExample.Rfree       = 1.001 #change the risk-free interest rate
-BaselineExample.CRRA        = 1.001   # change  the coefficient of relative risk aversion
-BaselineExample.BoroCnstArt = 0.    # change the artificial borrowing constraint
-BaselineExample.DiscFac     = .999
-BaselineExample.SRDiscFac    = 1.  
-BaselineExample.SRDiscFacE     = 1.
-BaselineExample.PermGroFac = [1.]
-BaselineExample.PermShkStd = [0.000001]                  
-BaselineExample.TranShkStd = [0.000001] 
-BaselineExample.updateIncomeProcess()
-BaselineExample.CubicBool = False
-BaselineExample.vFuncBool = True
-
-PerfectNaivete.Rfree       = 1.001 #change the risk-free interest rate
-PerfectNaivete.CRRA        = 1.001   # change  the coefficient of relative risk aversion
-PerfectNaivete.BoroCnstArt = 0.    # change the artificial borrowing constraint
-PerfectNaivete.DiscFac     = .999   
-PerfectNaivete.SRDiscFac    = .5   
-PerfectNaivete.SRDiscFacE     = 1. 
-PerfectNaivete.PermGroFac = [1.]
-PerfectNaivete.PermShkStd = [0.000001]                  
-PerfectNaivete.TranShkStd = [0.000001] 
-PerfectNaivete.updateIncomeProcess()
-PerfectNaivete.CubicBool = False
+#BaselineExample.Rfree       = 1.001 #change the risk-free interest rate
+#BaselineExample.CRRA        = 1.001   # change  the coefficient of relative risk aversion
+#BaselineExample.BoroCnstArt = 0.    # change the artificial borrowing constraint
+#BaselineExample.DiscFac     = .999
+#BaselineExample.SRDiscFac    = 1.  
+#BaselineExample.SRDiscFacE     = 1.
+#BaselineExample.PermGroFac = [1.]
+#BaselineExample.PermShkStd = [0.000001]                  
+#BaselineExample.TranShkStd = [0.000001] 
+#BaselineExample.updateIncomeProcess()
+#BaselineExample.CubicBool = False
+#BaselineExample.vFuncBool = True
+#
+#PerfectNaivete.Rfree       = 1.001 #change the risk-free interest rate
+#PerfectNaivete.CRRA        = 1.001   # change  the coefficient of relative risk aversion
+#PerfectNaivete.BoroCnstArt = 0.    # change the artificial borrowing constraint
+#PerfectNaivete.DiscFac     = .999   
+PerfectNaivete.SRDiscFac    = .5
+PerfectNaivete.SRDiscFacE     = 1
+#PerfectNaivete.PermGroFac = [1.]
+#PerfectNaivete.PermShkStd = [0.000001]                  
+#PerfectNaivete.TranShkStd = [0.000001] 
+#PerfectNaivete.updateIncomeProcess()
+#PerfectNaivete.CubicBool = False
 
 ####################################################################################################
 ####################################################################################################

@@ -28,7 +28,7 @@ utility_invP  = CRRAutility_invP
 utility_inv   = CRRAutility_inv
 utilityP_invP = CRRAutilityP_invP
 
-class ConsNaiveHyperbolicSolver(ConsIndShockSolver):
+class ConsQuasiHyperbolicSolver(ConsIndShockSolver):
     '''
     A class to solve dynamic programming problems for naive quasi-hyperbolic consumers.
     Extends ConsIndShockSolver, with identical inputs.  Computes an exponential solution if necessary,
@@ -242,9 +242,86 @@ def solveConsNaive(solution_next,IncomeDstn,LivPrb,DiscFac,SRDiscFac,SRDiscFacE,
 
         # iterate one period for the QH consumer
 
+    # The case of perfect naivete is very simple.
     DiscFac = DiscFac * SRDiscFac
 
-    solver = ConsNaiveHyperbolicSolver(solution_next,IncomeDstn,LivPrb,DiscFac,
+    solver = ConsQuasiHyperbolicSolver(solution_next,IncomeDstn,LivPrb,DiscFac,
+                                       SRDiscFac,SRDiscFacE,CRRA,Rfree,
+                                       PermGroFac,BoroCnstArt,aXtraGrid,
+                                       vFuncBool,CubicBool) 
+
+    solver.prepareToSolve()       # Do some preparatory work
+    solution_now = solver.solve() # Solve the period
+    return solution_now  
+
+def solveConsQuasiHyperbolic(solution_next,IncomeDstn,LivPrb,DiscFac,SRDiscFac,SRDiscFacE,
+                 CRRA,Rfree,PermGroFac,BoroCnstArt,aXtraGrid,vFuncBool,CubicBool):
+    '''
+    Solves a single period consumption-saving problem with CRRA utility and risky
+    income (subject to permanent and transitory shocks).  Can generate a value
+    function if requested; consumption function can be linear or cubic splines.
+
+    Parameters
+    ----------
+    solution_next : ConsumerSolution
+        The solution to next period's one period problem.
+    IncomeDstn : [np.array]
+        A list containing three arrays of floats, representing a discrete
+        approximation to the income process between the period being solved
+        and the one immediately following (in solution_next). Order: event
+        probabilities, permanent shocks, transitory shocks.
+    LivPrb : float
+        Survival probability; likelihood of being alive at the beginning of
+        the succeeding period.    
+    DiscFac : float
+        Intertemporal discount factor for future utility.        
+    CRRA : float
+        Coefficient of relative risk aversion.
+    Rfree : float
+        Risk free interest factor on end-of-period assets.
+    PermGroFac : float
+        Expected permanent income growth factor at the end of this period.
+    BoroCnstArt: float or None
+        Borrowing constraint for the minimum allowable assets to end the
+        period with.  If it is less than the natural borrowing constraint,
+        then it is irrelevant; BoroCnstArt=None indicates no artificial bor-
+        rowing constraint.
+    aXtraGrid: np.array
+        Array of "extra" end-of-period asset values-- assets above the
+        absolute minimum acceptable level.
+    vFuncBool: boolean
+        An indicator for whether the value function should be computed and
+        included in the reported solution.
+    CubicBool: boolean
+        Indicator for whether the solver should use cubic or linear interpolation.
+        
+    Returns
+    -------
+    solution_now : ConsumerSolution
+        The solution to the single period consumption-saving problem.  Includes
+        a consumption function cFunc (using cubic or linear splines), a marginal
+        value function vPfunc, a minimum acceptable level of normalized market
+        resources mNrmMin, normalized human wealth hNrm, and bounding MPCs MPCmin
+        and MPCmax.  It might also have a value function vFunc and marginal mar-
+        ginal value function vPPfunc.
+    '''
+
+#    if solution_next.EXPvPfuncNext == None:
+#        pass
+        #(solve problem for exponential consumer.  self.EXPvPfuncNext = [result for vPfuncNext])
+        # init a ConsIndShockSUmer Type
+
+        # solve the COnsIndShock problem
+
+        # assign the ConsIndShock continuation value to the QH naive consumer type
+
+        # iterate one period for the QH consumer
+
+    # The general quasi-hyperbolic case requires much more work.
+    raise NotImplementedError
+    DiscFac = DiscFac * SRDiscFac
+
+    solver = ConsQuasiHyperbolicSolver(solution_next,IncomeDstn,LivPrb,DiscFac,
                                        SRDiscFac,SRDiscFacE,CRRA,Rfree,
                                        PermGroFac,BoroCnstArt,aXtraGrid,
                                        vFuncBool,CubicBool) 
@@ -258,8 +335,7 @@ def solveConsNaive(solution_next,IncomeDstn,LivPrb,DiscFac,SRDiscFac,SRDiscFacE,
 ###############################################################################       
 ###############################################################################
 
-
-class ConsNaiveHyperbolicType(IndShockConsumerType):
+class ConsQuasiHyperbolicType(IndShockConsumerType):
     '''
     A consumer type with idiosyncratic shocks to permanent and transitory income.
     His problem is defined by a sequence of income distributions, survival prob-
@@ -291,12 +367,18 @@ class ConsNaiveHyperbolicType(IndShockConsumerType):
         IndShockConsumerType.__init__(self,cycles=cycles,time_flow=time_flow,**kwds)
 
         # Add consumer-type specific objects, copying to create independent versions
-        self.solveOnePeriod = solveConsNaive # idiosyncratic shocks solver
+        if self.SRDiscFacE==1:
+            self.solveOnePeriod = solveConsNaive
+        else:
+            self.solveOnePeriod = solveConsQuasiHyperbolic
+
         self.update() # Make assets grid, income process, terminal solution
 
 
 
 ###############################################################################
+
+
 
 if __name__ == '__main__':
     
