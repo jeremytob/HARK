@@ -978,6 +978,222 @@ class ConsIndShockSolverBasic(ConsIndShockSetup):
         solution   = self.addMPCandHumanWealth(solution)
         return solution        
        
+class ConsIndShockSolverBruteForce(ConsIndShockSetup):
+    '''
+    This class solves a single period of a standard consumption-saving problem,
+    using brute force techniques assuming a fixed asset grid.
+    '''
+    def prepareToCalcEndOfPrdvP(self):
+        '''
+        Prepare to calculate end-of-period marginal value by creating an array
+        of market resources that the agent could have next period, considering
+        the grid of end-of-period assets and the distribution of shocks he might
+        experience next period.
+
+        Parameters
+        ----------
+        none
+
+        Returns
+        -------
+        aNrmNow : np.array
+            A 1D array of end-of-period assets; also stored as attribute of self.
+        '''
+        aNrmNow     = np.asarray(self.aXtraGrid) + self.BoroCnstNat
+        ShkCount    = self.TranShkValsNext.size
+        aNrm_temp   = np.tile(aNrmNow,(ShkCount,1))
+
+        # Tile arrays of the income shocks and put them into useful shapes
+        aNrmCount         = aNrmNow.shape[0]
+        PermShkVals_temp  = (np.tile(self.PermShkValsNext,(aNrmCount,1))).transpose()
+        TranShkVals_temp  = (np.tile(self.TranShkValsNext,(aNrmCount,1))).transpose()
+        ShkPrbs_temp      = (np.tile(self.ShkPrbsNext,(aNrmCount,1))).transpose()
+
+        # Get cash on hand next period
+        mNrmNext          = self.Rfree/(self.PermGroFac*PermShkVals_temp)*aNrm_temp + TranShkVals_temp
+
+        # Store and report the results
+        self.PermShkVals_temp  = PermShkVals_temp
+        self.ShkPrbs_temp      = ShkPrbs_temp
+        self.mNrmNext          = mNrmNext
+        self.aNrmNow           = aNrmNow
+STOP_HERE
+        return aNrmNow
+
+
+    def calcEndOfPrdvP(self):
+        '''
+        Calculate end-of-period marginal value of assets at each point in aNrmNow.
+        Does so by taking a weighted sum of next period marginal values across
+        income shocks (in a preconstructed grid self.mNrmNext).
+
+        Parameters
+        ----------
+        none
+
+        Returns
+        -------
+        EndOfPrdvP : np.array
+            A 1D array of end-of-period marginal value of assets
+        '''
+
+        EndOfPrdvP  = self.DiscFacEff*self.Rfree*self.PermGroFac**(-self.CRRA)*np.sum(
+                      self.PermShkVals_temp**(-self.CRRA)*
+                      self.vPfuncNext(self.mNrmNext)*self.ShkPrbs_temp,axis=0)
+        return EndOfPrdvP
+
+
+    def getPointsForInterpolation(self,EndOfPrdvP,aNrmNow):
+        '''
+        Finds interpolation points (c,m) for the consumption function.
+
+        Parameters
+        ----------
+        EndOfPrdvP : np.array
+            Array of end-of-period marginal values.
+        aNrmNow : np.array
+            Array of end-of-period asset values that yield the marginal values
+            in EndOfPrdvP.
+
+        Returns
+        -------
+        c_for_interpolation : np.array
+            Consumption points for interpolation.
+        m_for_interpolation : np.array
+            Corresponding market resource points for interpolation.
+        '''
+        cNrmNow = self.uPinv(EndOfPrdvP)
+        mNrmNow = cNrmNow + aNrmNow
+
+        # Limiting consumption is zero as m approaches mNrmMin
+        c_for_interpolation = np.insert(cNrmNow,0,0.,axis=-1)
+        m_for_interpolation = np.insert(mNrmNow,0,self.BoroCnstNat,axis=-1)
+
+        # Store these for calcvFunc
+        self.cNrmNow = cNrmNow
+        self.mNrmNow = mNrmNow
+
+        return c_for_interpolation,m_for_interpolation
+
+
+    def usePointsForInterpolation(self,cNrm,mNrm,interpolator):
+        '''
+        Constructs a basic solution for this period, including the consumption
+        function and marginal value function.
+
+        Parameters
+        ----------
+        cNrm : np.array
+            (Normalized) consumption points for interpolation.
+        mNrm : np.array
+            (Normalized) corresponding market resource points for interpolation.
+        interpolator : function
+            A function that constructs and returns a consumption function.
+
+        Returns
+        -------
+        solution_now : ConsumerSolution
+            The solution to this period's consumption-saving problem, with a
+            consumption function, marginal value function, and minimum m.
+        '''
+        # Construct the unconstrained consumption function
+        cFuncNowUnc = interpolator(mNrm,cNrm)
+
+        # Combine the constrained and unconstrained functions into the true consumption function
+        cFuncNow = LowerEnvelope(cFuncNowUnc,self.cFuncNowCnst)
+
+        # Make the marginal value function and the marginal marginal value function
+        vPfuncNow = MargValueFunc(cFuncNow,self.CRRA)
+
+        # Pack up the solution and return it
+        solution_now = ConsumerSolution(cFunc=cFuncNow, vPfunc=vPfuncNow, mNrmMin=self.mNrmMinNow)
+        return solution_now
+
+
+    def makeBasicSolution(self,EndOfPrdvP,aNrm,interpolator):
+        '''
+        Given end of period assets and end of period marginal value, construct
+        the basic solution for this period.
+
+        Parameters
+        ----------
+        EndOfPrdvP : np.array
+            Array of end-of-period marginal values.
+        aNrm : np.array
+            Array of end-of-period asset values that yield the marginal values
+            in EndOfPrdvP.
+
+        interpolator : function
+            A function that constructs and returns a consumption function.
+
+        Returns
+        -------
+        solution_now : ConsumerSolution
+            The solution to this period's consumption-saving problem, with a
+            consumption function, marginal value function, and minimum m.
+        '''
+        cNrm,mNrm    = self.getPointsForInterpolation(EndOfPrdvP,aNrm)
+        solution_now = self.usePointsForInterpolation(cNrm,mNrm,interpolator)
+        return solution_now
+
+    def addMPCandHumanWealth(self,solution):
+        '''
+        Take a solution and add human wealth and the bounding MPCs to it.
+
+        Parameters
+        ----------
+        solution : ConsumerSolution
+            The solution to this period's consumption-saving problem.
+
+        Returns:
+        ----------
+        solution : ConsumerSolution
+            The solution to this period's consumption-saving problem, but now
+            with human wealth and the bounding MPCs.
+        '''
+        solution.hNrm   = self.hNrmNow
+        solution.MPCmin = self.MPCminNow
+        solution.MPCmax = self.MPCmaxEff
+        return solution
+
+    def makeLinearcFunc(self,mNrm,cNrm):
+        '''
+        Makes a linear interpolation to represent the (unconstrained) consumption function.
+
+        Parameters
+        ----------
+        mNrm : np.array
+            Corresponding market resource points for interpolation.
+        cNrm : np.array
+            Consumption points for interpolation.
+
+        Returns
+        -------
+        cFuncUnc : LinearInterp
+            The unconstrained consumption function for this period.
+        '''
+        cFuncUnc = LinearInterp(mNrm,cNrm,self.MPCminNow*self.hNrmNow,self.MPCminNow)
+        return cFuncUnc
+
+    def solve(self):
+        '''
+        Solves a one period consumption saving problem with risky income.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        solution : ConsumerSolution
+            The solution to the one period problem.
+        '''
+        aNrm       = self.prepareToCalcEndOfPrdvP()
+        EndOfPrdvP = self.calcEndOfPrdvP()
+        solution   = self.makeBasicSolution(EndOfPrdvP,aNrm,self.makeLinearcFunc)
+        solution   = self.addMPCandHumanWealth(solution)
+        return solution
+
 
 ###############################################################################
 ###############################################################################
