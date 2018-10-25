@@ -90,8 +90,11 @@ class ConsQuasiHyperbolicSolver(ConsIndShockSolver):
         self.assignParameters(solution_next,IncomeDstn,LivPrb,DiscFac,
                          CRRA,Rfree,SRDiscFac,SRDiscFacE,PermGroFac,
                          BoroCnstArt,aXtraGrid,vFuncBool,CubicBool)
+                              
    
         self.defUtilityFuncs()
+        
+
 
     def assignParameters(self,solution_next,IncomeDstn,LivPrb,DiscFac,
                          CRRA,Rfree,SRDiscFac,SRDiscFacE,PermGroFac,
@@ -148,7 +151,8 @@ class ConsQuasiHyperbolicSolver(ConsIndShockSolver):
 
         self.SRDiscFacE = SRDiscFacE
         self.SRDiscFac  = SRDiscFac
-           
+
+            
 #    def calcEndOfPrdvP(self):
 #        '''
 #        Calculate end-of-period marginal value of assets at each point in aNrmNow.
@@ -172,6 +176,8 @@ class ConsQuasiHyperbolicSolver(ConsIndShockSolver):
 #        
 ###############################################################################
 ###############################################################################
+
+
 
 def solveConsNaive(solution_next,IncomeDstn,LivPrb,DiscFac,SRDiscFac,SRDiscFacE,
                  CRRA,Rfree,PermGroFac,BoroCnstArt,aXtraGrid,vFuncBool,CubicBool):

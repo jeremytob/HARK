@@ -54,7 +54,6 @@ BoroCnstArt = 0.0                  # Artificial borrowing constraint; imposed mi
 CubicBool = True                    # Use cubic spline interpolation when True, linear interpolation when False
 vFuncBool = False                   # Whether to calculate the value function during solution
 T_total = 1                         # Total number of periods in cycle for this agent
-EulerEquationSolutionApproach=True  # The alternative to this is a brute force solution
 
 # Make a dictionary to specify an idiosyncratic income shocks consumer
 init_idiosyncratic_shocks = { 'CRRA': CRRA,
@@ -81,8 +80,7 @@ init_idiosyncratic_shocks = { 'CRRA': CRRA,
                               'vFuncBool':vFuncBool,
                               'CubicBool':CubicBool,
                               'T_retire':T_retire,
-                              'T_total':T_total,
-                              'EulerEquationSolutionApproach':EulerEquationSolutionApproach
+                              'T_total':T_total
                              }
                              
 # Make a dictionary to specify a lifecycle consumer with a finite horizon
@@ -245,10 +243,5 @@ init_lifecycleB = copy(init_lifecycle)
 init_lifecycleB ['SRDiscFac'] = SRDiscFac
 init_lifecycleB ['SRDiscFacE'] = SRDiscFacE
 init_lifecycleB ['PermGroFacDelE'] = PermGroFacDelE
-
-# If partial or full sophistication, make it a default to calculate and carry around the value function:
-# vFuncBool=True
-# Also specify a general way to solve:
-init_idiosyncratic_shocksB['EulerEquationSolutionApproach']=False
 
 
