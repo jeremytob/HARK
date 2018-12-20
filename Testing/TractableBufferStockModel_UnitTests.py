@@ -4,17 +4,19 @@ Created on Thu Mar 24 11:01:50 2016
 
 @author: kaufmana
 """
-import sys
-import os
-sys.path.insert(0, os.path.abspath('../'))
-sys.path.insert(0, os.path.abspath('../ConsumptionSaving'))
-sys.path.insert(0, os.path.abspath('./'))
+from __future__ import print_function, division
+from __future__ import absolute_import
 
-import TractableBufferStockModel as Model
+from builtins import str
+from builtins import zip
+from builtins import range
+from builtins import object
+
+import HARK.ConsumptionSaving.TractableBufferStockModel as Model
 import unittest
 
 class FuncTest(unittest.TestCase):
-    
+
     def setUp(self):
         base_primitives = {'UnempPrb' : .015,
                            'DiscFac' : 0.9,
@@ -52,11 +54,11 @@ class FuncTest(unittest.TestCase):
                   1.4722358408529614,
                   1.5307746658958221]
         return test_model.solution[0].cNrm_list,cNrm_list
-                  
+
     def test1(self):
         results = self.setUp()
         self.assertEqual(results[0],results[1])
-        
-     
+
+
 if __name__ == '__main__':
     unittest.main()

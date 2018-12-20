@@ -1,20 +1,23 @@
-Heterogeneous Agents Resources and toolKit (HARK)
-beta release - June 25, 2016
+# Heterogeneous Agents Resources and toolKit (HARK)
+pre-release 0.9.1 - 13 July, 2018
+
+Click the Badge for Citation Info.
+[![DOI](https://zenodo.org/badge/50448254.svg)](https://zenodo.org/badge/latestdoi/50448254)
+
 
 Table of Contents:
 
-* I.   Introduction
-* II.  Quick start guide
-* III. List of files in repository
-* IV.  Warnings and disclaimers
-* V.   License Information
+* [I.   Introduction](#i-introduction)
+* [II.  Quick start guide](#ii-quick-start-guide)
+* [III. List of files in repository](#iii-list-of-files-in-repository)
+* [IV.  Warnings and disclaimers](#iv-warnings-and-disclaimers)
+* [V.   License Information](#v-license)
 
--------------------------------------------------------------------
 
-I. INTRODUCTION
+## I. INTRODUCTION
 
 Welcome to HARK!  We are tremendously excited you're here.  HARK is
-very much a work in progress, but we hope you find it valuable.  We 
+very much a work in progress, but we hope you find it valuable.  We
 *really* hope you find it so valuable that you decide to contribute
 to it yourself.  This document will tell you how to get HARK up and
 running on your machine, and what you will find in HARK once you do.
@@ -34,33 +37,32 @@ Online documentation: https://econ-ark.github.io/HARK
 
 User guide: /Documentation/HARKmanual.pdf (in the repository)
 
--------------------------------------------------------------------
 
-II. QUICK START GUIDE
+## II. QUICK START GUIDE
 
 This is going to be easy, friend.  HARK is written in Python, specifically the
 Anaconda distribution of Python.  Follow these easy steps to get HARK going:
 
 1) Go to https://www.continuum.io/downloads and download Anaconda for your
-operating system; be sure to get the version for Python 2.7
+operating system
 
 2) Install Anaconda, using the instructions provided on that page.  Now you have
 installed everything you need to run most of HARK.  But you still need to get HARK
 on your machine.
 
-3) To get HARK on your machine, you should know that HARK is managed with version 
+3) To get HARK on your machine, you should know that HARK is managed with version
 control software called "Git".  HARK is hosted on a website called "GitHub" devoted
 to hosting projects managed with Git.
 
-If you don't want to know more than that, you don't have to. Go to HARK's page
+   If you don't want to know more than that, you don't have to. Go to HARK's page
 on GitHub (https://github.com/econ-ark/HARK), click the "Clone or download" button
 in the upper right hand corner of the page, then click "Download ZIP". Unzip it
 into an empty directory. Maybe call that directory /HARK ?  The choice is yours.
 
-You can also clone HARK off GitHub using Git.  This is slightly more difficult,
+   You can also clone HARK off GitHub using Git.  This is slightly more difficult,
 because it involves installing Git on your machine and learning a little about
 how to use Git.  We believe this is an investment worth making, but it is up to you.
-To learn more about Git, read the documentation at https://git-scm.com/documentation 
+To learn more about Git, read the documentation at https://git-scm.com/documentation
 or visit many other great Git resources on the internet.
 
 4) Open Spyder, an interactive development environment (IDE) for Python
@@ -69,7 +71,7 @@ On Linux, open the command line and type "spyder".  On Mac, open the command
 line and type "spyder".
 
 5) Navigate to the directory where you put the HARK files.  This can be done
-within Spyder by doing "import os" and then using os.chdir() to change directories.  
+within Spyder by doing "import os" and then using os.chdir() to change directories.
 chdir works just like cd at a command prompt on most operating systems, except that
 it takes a string as input: os.chdir('Music') moves to the Music subdirectory
 of the current working directory.
@@ -87,11 +89,11 @@ To change the default directory (the "global working directory"), see
 Tools-->Preferences-->Global working directory; you might need to restart
 Spyder for the change to take effect.
 
-8) Read the more complete documentation in HARKmanual.pdf.
+8) Read the more complete documentation in [HARKmanual.pdf](https://github.com/econ-ark/HARK/blob/master/Documentation/HARKmanual.pdf).
 
 9) OPTIONAL: If you want to use HARK's multithreading capabilities, you will
 need two Python packages that do not come automatically with Anaconda: joblib
-and dill.  Assuming you have the necessary permissions on your machine, the 
+and dill.  Assuming you have the necessary permissions on your machine, the
 easiest way to do this is through Anaconda.  Go to the command line, and type
 "conda install joblib" and then "conda install dill" (accept defaults if prompted).
 If this doesn't work, but you have Git, you can just clone the packages directly
@@ -106,25 +108,25 @@ Note: If you did not put joblib and dill in one of the paths in sys.path, you wi
 need to add the joblib and dill directories to sys.path.  The easiest way to do this
 is to open up Anaconda, and type:
 
+```python
 import sys
 sys.path.append('path_to_joblib_directory')
 sys.path.append('path_to_dill_directory')
+```
 
--------------------------------------------------------------------
-
-III. LIST OF FILES IN REPOSITORY
+## III. LIST OF FILES IN REPOSITORY
 
 This section contains descriptions of every file included in the HARK
 repository at the time of the beta release, categorized for convenience.
 
 Documentation files:
-* README.md: The file you are currently reading.
-* Documentation/HARKdoc.pdf: A mini-user guide produced for a December 2015 workshop on HARK, unofficially representing the alpha version.  Somewhat out of date.
-* Documentation/HARKmanual.pdf: A user guide for HARK, written for the beta release at CEF 2016 in Bordeaux.  Should contain 90% fewer lies relative to HARKdoc.pdf.
-* Documentation/HARKmanual.tex: LaTeX source for the user guide.  Open source code probably requires an open source manual as well.
-* Documentation/ConsumptionSavingModels.pdf: Mathematical descriptions of the various consumption-saving models in HARK and how they map into the code.
-* Documentation/ConsumptionSavingModels.tex: LaTeX source for the "models" writeup.
-* Documentation/NARK.pdf: Variable naming conventions for HARK, plus concordance with LaTeX variable definitions.  Still in development.   
+* [README.md](https://github.com/econ-ark/HARK/blob/master/README.md): The file you are currently reading.
+* [Documentation/HARKdoc.pdf](https://github.com/econ-ark/HARK/blob/master/Documentation/HARKdoc.pdf): A mini-user guide produced for a December 2015 workshop on HARK, unofficially representing the alpha version.  Somewhat out of date.
+* [Documentation/HARKmanual.pdf](https://github.com/econ-ark/HARK/blob/master/Documentation/HARKmanual.pdf): A user guide for HARK, written for the beta release at CEF 2016 in Bordeaux.  Should contain 90% fewer lies relative to HARKdoc.pdf.
+    * [Documentation/HARKmanual.tex](https://github.com/econ-ark/HARK/blob/master/Documentation/HARKmanual.tex): LaTeX source for the user guide.  Open source code probably requires an open source manual as well.
+* [Documentation/ConsumptionSavingModels.pdf](https://github.com/econ-ark/HARK/blob/master/Documentation/ConsumptionSavingModels.pdf): Mathematical descriptions of the various consumption-saving models in HARK and how they map into the code.
+    * [Documentation/ConsumptionSavingModels.tex](https://github.com/econ-ark/HARK/blob/master/Documentation/ConsumptionSavingModels.tex): LaTeX source for the "models" writeup.
+* [Documentation/NARK.pdf](https://github.com/econ-ark/HARK/blob/master/Documentation/NARK.pdf): Variable naming conventions for HARK, plus concordance with LaTeX variable definitions.  Still in development.
 
 Tool modules:
 * HARKcore.py:
@@ -138,7 +140,7 @@ Tool modules:
     to continuous distributions, basic plotting functions for convenience,
     and a few unclassifiable things.  Does nothing when run.
 * HARKestimation.py:
-    Functions for estimating models.  As is, it only has a few wrapper 
+    Functions for estimating models.  As is, it only has a few wrapper
     functions for scipy.optimize optimization routines.  Will be expanded
     in the future with more interesting things.  Does nothing when run.
 * HARKsimulation.py:
@@ -208,7 +210,7 @@ Model modules:
     entire "fashion market" constituting many types of agents, finding a rule
     for the evolution of the style distribution in the population that is justi-
     fied by fashion victims' collective actions.
-   
+
 Application modules:
 * SolvingMicroDSOPs/StructEstimation.py:
     Conducts a very simple structural estimation using the idiosyncratic shocks
@@ -334,24 +336,18 @@ Other files that you don't need to worry about:
     function for the KinkyPref model.
 
 
--------------------------------------------------------------------
-
-IV. WARNINGS AND DISCLAIMERS
+## IV. WARNINGS AND DISCLAIMERS
 
 This is an early beta version of HARK.  The code has not been
-extensively tested as it should be.  We hope it is useful, but 
-there are absolutely no guarantees (expressed or implied) that 
-it works or will do what you want.  Use at your own risk.  And 
+extensively tested as it should be.  We hope it is useful, but
+there are absolutely no guarantees (expressed or implied) that
+it works or will do what you want.  Use at your own risk.  And
 please, let us know if you find bugs by posting an issue to the
 GitHub page!
 
--------------------------------------------------------------------
 
-V. License
+## V. License
 
-All of HARK is licensed under the Apache License, Version 2.0 (ALv2). Please see 
-the LICENSE file for the text of the license. More information can be found at: 
+All of HARK is licensed under the Apache License, Version 2.0 (ALv2). Please see
+the LICENSE file for the text of the license. More information can be found at:
 http://www.apache.org/dev/apply-license.html
-
--------------------------------------------------------------------
-
